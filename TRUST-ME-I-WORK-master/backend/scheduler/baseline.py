@@ -129,5 +129,7 @@ def solve_baseline() -> ScheduleResult:
         ))
 
     solve_duration = time.time() - start_time
-    summary = compute_summary(train_schedules, solve_duration)
+    # FCFS is a greedy rule-based heuristic, not an optimizer — it never claims
+    # to be optimal, so we mark it plainly rather than defaulting to "optimal".
+    summary = compute_summary(train_schedules, solve_duration, is_proven_optimal=False)
     return ScheduleResult(trains=train_schedules, summary=summary)
