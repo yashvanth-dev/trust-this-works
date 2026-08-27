@@ -101,7 +101,7 @@ export default function App() {
         <SignalLoader />
         <div>
           <h2 style={{ margin: 0 }}>Computing optimal schedule</h2>
-          <p>The CP-SAT solver is optimizing dispatch order across the corridor. This takes roughly 30 seconds.</p>
+          <p>The CP-SAT solver is optimizing dispatch order across the corridor. This can take up to a minute while it proves the schedule is optimal.</p>
         </div>
       </div>
     );
@@ -114,7 +114,7 @@ export default function App() {
         <div>
           <h2 style={{ margin: 0 }}>Starting up</h2>
           <p style={{ color: 'var(--color-signal-amber)' }}>{error}</p>
-          <p>The AI (CP-SAT solver) takes about 30 seconds to compute the routes before the server opens.</p>
+          <p>The AI (CP-SAT solver) can take up to a minute to compute and verify the routes before the server opens.</p>
         </div>
       </div>
     );
