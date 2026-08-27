@@ -4,6 +4,16 @@ echo.
 
 cd /d "%~dp0"
 
+echo Installing backend dependencies...
+cd backend
+pip install -r requirements.txt
+cd ..
+
+echo Installing frontend dependencies...
+cd frontend
+call npm install
+cd ..
+
 echo Starting FastAPI Backend...
 start cmd /k "cd backend && python -m uvicorn api.main:app --reload"
 
