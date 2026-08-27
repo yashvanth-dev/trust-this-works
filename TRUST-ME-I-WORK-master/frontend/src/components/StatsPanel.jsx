@@ -48,7 +48,11 @@ export default function StatsPanel({ currentSchedule, compare, mode }) {
             <div className="stat-card-icon"><Clock size={16} /></div>
             <div className="stat-label">Solve Time</div>
             <div className="stat-value mono">{currentSummary.solve_time_seconds.toFixed(3)}s</div>
-            <div className="stat-sub">Exact optimum, not a heuristic</div>
+            <div className="stat-sub">
+              {currentSummary.is_proven_optimal
+                ? 'Proven optimal (CP-SAT)'
+                : `Best found so far, ~${currentSummary.optimality_gap_pct}% gap`}
+            </div>
           </div>
         </div>
       ) : (
