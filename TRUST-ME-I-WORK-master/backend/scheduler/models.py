@@ -101,6 +101,8 @@ class ScheduleSummary:
     throughput_trains_per_hour: float
     per_class_avg_delay: Dict[str, float]
     solve_time_seconds: float = 0.0
+    is_proven_optimal: bool = True
+    optimality_gap_pct: float = 0.0
 
     def to_dict(self) -> dict:
         return {
@@ -109,6 +111,8 @@ class ScheduleSummary:
             "throughput_trains_per_hour": self.throughput_trains_per_hour,
             "per_class_avg_delay": self.per_class_avg_delay,
             "solve_time_seconds": self.solve_time_seconds,
+            "is_proven_optimal": self.is_proven_optimal,
+            "optimality_gap_pct": self.optimality_gap_pct,
         }
 
 @dataclass
@@ -122,7 +126,12 @@ class ScheduleResult:
             "summary": self.summary.to_dict(),
         }
 
-def compute_summary(schedules: List[TrainSchedule], solve_time: float = 0.0) -> ScheduleSummary:
+def compute_summary(
+    schedules: List[TrainSchedule],
+    solve_time: float = 0.0,
+    is_proven_optimal: bool = False,
+    optimality_gap_pct: float = 0.0,
+) -> ScheduleSummary:
     total_weighted_delay = sum(s.priority_weight * s.delay for s in schedules)
     total_raw_delay = sum(s.delay for s in schedules)
 
@@ -146,5 +155,7 @@ def compute_summary(schedules: List[TrainSchedule], solve_time: float = 0.0) -> 
         total_raw_delay=total_raw_delay,
         throughput_trains_per_hour=round(throughput, 2),
         per_class_avg_delay=per_class_avg,
-        solve_time_seconds=round(solve_time, 3)
+        solve_time_seconds=round(solve_time, 3),
+        is_proven_optimal=is_proven_optimal,
+        optimality_gap_pct=round(optimality_gap_pct, 1),
     )
