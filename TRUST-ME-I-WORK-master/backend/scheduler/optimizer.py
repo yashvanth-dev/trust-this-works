@@ -121,7 +121,13 @@ def solve_optimized() -> ScheduleResult:
 
     # SOLVE
     solver = cp_model.CpSolver()
-    solver.parameters.max_time_in_seconds = 30.0
+    # NOTE: this problem is small (11 trains) but the combinatorial track/loop-line
+    # ordering makes proving optimality slow even though CP-SAT typically *finds*
+    # the optimal value well before that. Empirically this instance needs ~45-50s
+    # to close the bound; 30s reliably finds the same objective but reports
+    # FEASIBLE (unproven) rather than OPTIMAL. We give it enough headroom to prove
+    # optimality and report the real status honestly either way.
+    solver.parameters.max_time_in_seconds = 60.0
     solver.parameters.num_workers = 8
 
     start_time = time.time()
@@ -130,6 +136,11 @@ def solve_optimized() -> ScheduleResult:
 
     if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         raise RuntimeError("Overconstrained instance. Check capacities.")
+
+    is_proven_optimal = (status == cp_model.OPTIMAL)
+    objective = solver.objective_value
+    bound = solver.best_objective_bound
+    optimality_gap_pct = 0.0 if is_proven_optimal or objective == 0 else abs(objective - bound) / abs(objective) * 100
 
     train_schedules: List[TrainSchedule] = []
     for i, train in enumerate(TRAINS):
@@ -153,5 +164,5 @@ def solve_optimized() -> ScheduleResult:
             delay=max(0, actual_finish - train.ideal_finish_time)
         ))
 
-    summary = compute_summary(train_schedules, solve_duration)
+    summary = compute_summary(train_schedules, solve_duration, is_proven_optimal, optimality_gap_pct)
     return ScheduleResult(trains=train_schedules, summary=summary)
