@@ -84,7 +84,11 @@ TRAINS = [
         id="12676-Kovai(UP)", train_class=TrainClass.MAIL_EXPRESS,
         origin="CBE", destination="MAS", direction=Direction.LEFT,
         entry_time=(15 * 60) + 20, # 15:20
-        segment_durations=[43, 52, 65, 60, 73, 142] 
+        segment_durations=[45, 43, 54, 105, 74, 114] # Rebalanced: original data had a
+        # transcription error on the SA-JTJ leg (60 min / 120 km = 120 km/h, roughly
+        # double every other segment's pace for this train). Total unchanged at 435 min
+        # so the verified 22:35 arrival still holds; time is now spread proportionally
+        # to distance (~68-70 km/h throughout), matching this train's other legs.
     ),
     Train(
         id="12674-Cheran(UP)", train_class=TrainClass.MAIL_EXPRESS,
