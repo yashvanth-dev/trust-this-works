@@ -15,7 +15,7 @@ app.add_middleware(
 )
 
 # Compute schedules once on startup since the topology is static
-print("Computing schedules (this takes ~30 seconds for CP-SAT)...")
+print("Computing schedules (this can take up to a minute for CP-SAT to prove optimality)...")
 results = compare_schedules()
 baseline_result = results["baseline"]
 optimized_result = results["optimized"]
